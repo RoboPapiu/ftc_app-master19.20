@@ -1,0 +1,12 @@
+22/10/2019
+
+Scopuri:
+     - construim terenul
+     - discutam strategiile de autonomie si ne impartim task-urile
+     - TeleOp pentru prezentare
+     - autonomie simpla in care ducem skystone-urile si ne parcam langa perete (sub linie)
+
+Am reusit:
+    - terenul
+    - TeleOp prezentare
+    - la autonomie am facut funnctile de miscare,  uramand maine sa incepem recunoasterea skystone-ului cu ajutorul senzorului de culoare
