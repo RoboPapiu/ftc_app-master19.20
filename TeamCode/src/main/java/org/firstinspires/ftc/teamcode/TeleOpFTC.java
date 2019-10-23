@@ -94,9 +94,12 @@ public class TeleOpFTC extends OpMode
     @Override
     public void loop() {
 
-        double speedLeft = (-gamepad1.left_stick_y + gamepad1.left_stick_x)/2;
-        double speedRight = (-gamepad1.left_stick_y - gamepad1.left_stick_x)/2;
+        double speedLeft = -gamepad1.left_stick_y + gamepad1.left_stick_x;
+        double speedRight = -gamepad1.left_stick_y - gamepad1.left_stick_x;
         double strafePower = 0.5;
+
+//        speedLeft = -gamepad1.left_stick_y + gamepad1.left_stick_x;
+//        speedRight = -gamepad1.left_stick_y - gamepad1.left_stick_x;
 
         if(gamepad1.a)
         {
@@ -107,22 +110,25 @@ public class TeleOpFTC extends OpMode
 
 
         if (gamepad1.dpad_left) {
-            robot.frontLeft.setPower(strafePower);
-            robot.frontRight.setPower(strafePower);
-            robot.backLeft.setPower(-strafePower);
-            robot.backRight.setPower(-strafePower);
-        }
-        else if (gamepad1.dpad_right) {
             robot.frontLeft.setPower(-strafePower);
             robot.frontRight.setPower(-strafePower);
             robot.backLeft.setPower(strafePower);
             robot.backRight.setPower(strafePower);
+        }
+        else if (gamepad1.dpad_right) {
+            robot.frontLeft.setPower(strafePower);
+            robot.frontRight.setPower(strafePower);
+            robot.backLeft.setPower(-strafePower);
+            robot.backRight.setPower(-strafePower);
         }
         else if (speedLeft != 0 || speedRight != 0) {
             robot.frontLeft.setPower(speedLeft);
             robot.frontRight.setPower(-speedRight);
             robot.backLeft.setPower(speedLeft);
             robot.backRight.setPower(-speedRight);
+
+            telemetry.addData("motoare gay: ", "%f | %f", speedLeft, speedRight);
+            telemetry.update();
         }
         else {
             robot.frontLeft.setPower(0);
@@ -131,7 +137,18 @@ public class TeleOpFTC extends OpMode
             robot.backRight.setPower(0);
         }
 
-
+        if(gamepad1.dpad_down)
+        {
+            robot.servoCub.setPosition(0.3);
+        }
+        else if(gamepad1.dpad_up)
+        {
+            robot.servoCub.setPosition(0.85);
+        }
+        else if(gamepad1.y)
+        {
+            robot.servoCub.setPosition(1);
+        }
 
 
         }

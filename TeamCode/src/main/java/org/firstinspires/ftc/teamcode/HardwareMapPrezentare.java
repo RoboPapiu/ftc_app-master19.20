@@ -47,10 +47,10 @@ public class HardwareMapPrezentare
         bratMotor1.setPower(0);
         bratMotor2.setPower(0);
 
-        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         bratMotor1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         bratMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 

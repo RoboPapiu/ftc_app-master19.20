@@ -10,3 +10,13 @@ Am reusit:
     - terenul
     - TeleOp prezentare
     - la autonomie am facut funnctile de miscare,  uramand maine sa incepem recunoasterea skystone-ului cu ajutorul senzorului de culoare
+
+23/10/2019
+Obiective:
+    - descoperim de ce nu merge functia ce misacare la autonomie
+    - scriem o functie cu care sa ne dam seama care este skystone-ul
+    - sa facem o mica autonomie daca avem timp
+
+Am reusit:
+    -inca nu stim de ce nu merge bine miscarea, dar am descoperit ca un motor nu functioneaza ok (frontRight)
+    -update dupa 30 de min, erau puse invers 2 cabluri, @silviu.....

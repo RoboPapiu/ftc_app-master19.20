@@ -13,6 +13,7 @@ public class HardwareMapFTC
     public DcMotor backLeft = null;
     public DcMotor backRight = null;
 
+    public Servo servoCub = null;
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
     private ElapsedTime period  = new ElapsedTime();
@@ -45,7 +46,8 @@ public class HardwareMapFTC
 
         //Servo AICI
 
-
+        servoCub = hwMap.get(Servo.class, "servoCub");
+        servoCub.setPosition(0.2);
 
     }
  }
