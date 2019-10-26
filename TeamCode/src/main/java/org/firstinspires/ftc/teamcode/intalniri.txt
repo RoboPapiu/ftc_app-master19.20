@@ -18,5 +18,25 @@ Obiective:
     - sa facem o mica autonomie daca avem timp
 
 Am reusit:
-    -inca nu stim de ce nu merge bine miscarea, dar am descoperit ca un motor nu functioneaza ok (frontRight)
-    -update dupa 30 de min, erau puse invers 2 cabluri, @silviu.....
+    - inca nu stim de ce nu merge bine miscarea, dar am descoperit ca un motor nu functioneaza ok (frontRight)
+    - update dupa 30 de min, erau puse invers 2 cabluri, @silviu.....
+    - tot nu a mers :(
+
+24/10/2019
+Obiective:
+    - DE CE NU MERGE ENCODERDRIVE-UL!!!!
+
+Am reusit:
+    - sa-mi bag ceva in copy/paste.... era la reset ceva gresit + cablurile ieri
+    - am facut o mica autonomie YEY, nu vede care e skystone-ul inca trebuie codat asta, probabil o face marc maine
+
+25/10/2019
+ -functia de recunoastere, vezi ma sa folosesti si senzor de distanta si cand e la 2cm ish si vede 0 ii skystone
+
+ 26/10/2019
+ Obiective:
+    -sa recunoasca cu senzoru de culoare skystoneurile
+    -dupa ce recunoaste skystoneurile sa le duca in partea cealalta si sa se parcheze indiferent de pozitia initiala a skystoneului
+
+ Am reusit:
+    -tot

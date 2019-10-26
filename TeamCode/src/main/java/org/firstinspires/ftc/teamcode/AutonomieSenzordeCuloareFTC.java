@@ -1,16 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.provider.Telephony;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
-
-@Autonomous(name="AutonomieFTC", group="FTC")
+@Autonomous(name="AutonomieSenzordeCuloareFTC", group="FTC")
 //@Disabled
-public class AutonomieFTC extends LinearOpMode {
+public class AutonomieSenzordeCuloareFTC extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareMapFTC         robot   = new HardwareMapFTC();   // Use a Pushbot's hardware
@@ -25,6 +24,7 @@ public class AutonomieFTC extends LinearOpMode {
     static final double     TURN_SPEED              = 0.5;
     static final double     stdTimeOut              = 5.0;
     int                     indexLine               = 0;
+    double                  strafeLeft              = 130.0;
 
     @Override
     public void runOpMode() {
@@ -61,14 +61,49 @@ public class AutonomieFTC extends LinearOpMode {
             printLineDone(indexLine); //functie scisa de mine (aka Dragos) uitate ce face, e super easy, dar ajuta destul de mult, e jos jos
             sleep(1500);
 
-            //72 cm strafe dreapta, index 2
-            strafeDrive(DRIVE_SPEED, 'r', 72.0, stdTimeOut);
-            printLineDone(indexLine);
-            sleep(1000);
+            while (opModeIsActive()) {
 
-            //prind cubul cu servo
-            robot.servoCub.setPosition(1);
-            sleep(1000);
+                sleep(100);
+                double alphared = (double)(robot.colorSensor.alpha())/robot.colorSensor.red();
+
+
+                telemetry.addData("red: ",  robot.colorSensor.red());
+                telemetry.addData("green: ",  robot.colorSensor.green());
+                telemetry.addData("blue: ",  robot.colorSensor.blue());
+                telemetry.addData("alpha: ",  robot.colorSensor.alpha());
+                telemetry.addData("alphared: ", alphared);
+                telemetry.update();
+
+                sleep(100);
+
+                if (isSkystone()) {
+
+                    robot.servoCub.setPosition(1);
+                    sleep(1000);
+
+                    break;
+/*
+                    encoderDrive(DRIVE_SPEED, -50.0, -50.0, stdTimeOut);
+                    printLineDone(indexLine);
+                    sleep(1000);
+
+
+                    strafeDrive(DRIVE_SPEED, 'l', 230.0, stdTimeOut);
+                    printLineDone(indexLine);
+                    sleep(1000);*/
+
+                }
+
+                else {
+
+                    strafeDrive(DRIVE_SPEED, 'r', 23, stdTimeOut);
+                    printLineDone(indexLine);
+                    sleep(1000);
+                    strafeLeft += 23.5;
+
+                }
+
+            }
 
             //30 cm spate, index 3
             encoderDrive(DRIVE_SPEED, -50.0, -50.0, stdTimeOut);
@@ -76,7 +111,7 @@ public class AutonomieFTC extends LinearOpMode {
             sleep(1000);
 
             //210 cm strafe stange, index 4
-            strafeDrive(DRIVE_SPEED, 'l', 230.0, stdTimeOut);
+            strafeDrive(DRIVE_SPEED, 'l', strafeLeft, stdTimeOut);
             printLineDone(indexLine);
             sleep(1000);
 
@@ -88,7 +123,7 @@ public class AutonomieFTC extends LinearOpMode {
             encoderDrive(DRIVE_SPEED, -5.0, -5.0, stdTimeOut);
             sleep(1000);
 
-            strafeDrive(DRIVE_SPEED, 'r', 25.0, stdTimeOut);
+            strafeDrive(DRIVE_SPEED, 'r', 60.0, stdTimeOut);
 
             sleep(100000000); //e un sleep sa nu termine programul si sa vad inca pe  ecran tot ce vreu de la telemetry, sterge-l daca vrei
 
@@ -219,15 +254,12 @@ public class AutonomieFTC extends LinearOpMode {
 
     boolean isSkystone () {
         boolean ok = false;
-        if (robot.colorSensor.alpha()>100) {
-            if (robot.colorSensor.red()>40 && robot.colorSensor.red()<140 &&
-                robot.colorSensor.green()>45 && robot.colorSensor.green()<115 &&
-                robot.colorSensor.blue()>40 && robot.colorSensor.blue()<55) {
-                ok = true;
-            }
-            else {
-                ok = false;
-            }
+        double alphared = (double)(robot.colorSensor.alpha())/robot.colorSensor.red();
+        if (alphared>=2.5) {
+            ok = true;
+        }
+        else {
+            ok = false;
         }
         return ok;
     }

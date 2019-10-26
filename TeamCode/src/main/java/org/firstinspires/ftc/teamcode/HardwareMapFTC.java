@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -14,6 +15,8 @@ public class HardwareMapFTC
     public DcMotor backRight = null;
 
     public Servo servoCub = null;
+
+    public ColorSensor colorSensor = null;
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
     private ElapsedTime period  = new ElapsedTime();
@@ -48,6 +51,10 @@ public class HardwareMapFTC
 
         servoCub = hwMap.get(Servo.class, "servoCub");
         servoCub.setPosition(0.2);
+
+        //Senzor de culoare AICI
+
+        colorSensor = hwMap.get(ColorSensor.class, "colorSensor");
 
     }
  }

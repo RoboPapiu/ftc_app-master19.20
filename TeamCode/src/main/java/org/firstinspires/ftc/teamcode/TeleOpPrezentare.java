@@ -101,17 +101,19 @@ public class TeleOpPrezentare extends OpMode
         //SERVO CUB
         if (gamepad1.dpad_down)
         {
-            robot.servoCub.setPosition(0.42);
-            telemetry.addData("servo gay", "1");
-            telemetry.update();
+            robot.servoCub.setPosition(0.47);
+           // telemetry.addData("servo gay", "1");
+           // telemetry.update();
 
         }
         else if (gamepad1.dpad_up)
         {
             robot.servoCub.setPosition(0);
-            telemetry.addData("servo gay", "0");
-            telemetry.update();
+           // telemetry.addData("servo gay", "0");
+           // telemetry.update();
         }
+        else if(gamepad1.y)
+            robot.servoCub.setPosition(0.8);
 
 
         //BRAT
@@ -121,7 +123,8 @@ public class TeleOpPrezentare extends OpMode
         } else if (gamepad1.left_bumper) {
             robot.bratMotor1.setPower(-1);
             robot.bratMotor2.setPower(-1);
-        } else {
+        }
+        else {
             robot.bratMotor1.setPower(0);
             robot.bratMotor2.setPower(0);
         }
