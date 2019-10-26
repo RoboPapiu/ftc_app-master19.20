@@ -74,7 +74,7 @@ public class AutonomieSenzordeCuloareFTC extends LinearOpMode {
                 telemetry.addData("alphared: ", alphared);
                 telemetry.update();
 
-                sleep(100);
+                sleep(101);
 
                 if (isSkystone()) {
 
