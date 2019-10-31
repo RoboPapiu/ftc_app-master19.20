@@ -67,7 +67,7 @@ public class AutonomieFTC extends LinearOpMode {
             sleep(1000);
 
             //prind cubul cu servo
-            robot.servoCub.setPosition(1);
+            //robot.servoCub.setPosition(1);
             sleep(1000);
 
             //30 cm spate, index 3
@@ -81,7 +81,7 @@ public class AutonomieFTC extends LinearOpMode {
             sleep(1000);
 
             //lasa cubul cu servo
-            robot.servoCub.setPosition(0.3);
+           // robot.servoCub.setPosition(0.3);
             sleep(1000);
 
 

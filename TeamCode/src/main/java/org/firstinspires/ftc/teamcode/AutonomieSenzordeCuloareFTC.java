@@ -24,7 +24,10 @@ public class AutonomieSenzordeCuloareFTC extends LinearOpMode {
     static final double     TURN_SPEED              = 0.5;
     static final double     stdTimeOut              = 5.0;
     int                     indexLine               = 0;
-    double                  strafeLeft              = 130.0;
+    double                  strafeLeft              = 140.0;
+    int                     inde = 0;
+
+    static final double     COUNTS_PER_MOTOR_ARM    = 288.0;
 
     @Override
     public void runOpMode() {
@@ -78,7 +81,7 @@ public class AutonomieSenzordeCuloareFTC extends LinearOpMode {
 
                 if (isSkystone()) {
 
-                    robot.servoCub.setPosition(1);
+                    //robot.servoCub.setPosition(1);
                     sleep(1000);
 
                     break;
@@ -99,7 +102,7 @@ public class AutonomieSenzordeCuloareFTC extends LinearOpMode {
                     strafeDrive(DRIVE_SPEED, 'r', 23, stdTimeOut);
                     printLineDone(indexLine);
                     sleep(1000);
-                    strafeLeft += 23.5;
+                    strafeLeft += 24.0;
 
                 }
 
@@ -110,17 +113,19 @@ public class AutonomieSenzordeCuloareFTC extends LinearOpMode {
             printLineDone(indexLine);
             sleep(1000);
 
+
             //210 cm strafe stange, index 4
             strafeDrive(DRIVE_SPEED, 'l', strafeLeft, stdTimeOut);
             printLineDone(indexLine);
             sleep(1000);
 
             //lasa cubul cu servo
-            robot.servoCub.setPosition(0.3);
+            //robot.servoCub.setPosition(0.3);
             sleep(1000);
 
+            encoderDrive(DRIVE_SPEED, 65, 65, stdTimeOut);
 
-            encoderDrive(DRIVE_SPEED, -5.0, -5.0, stdTimeOut);
+            encoderDrive(DRIVE_SPEED, -15.0, -15.0, stdTimeOut);
             sleep(1000);
 
             strafeDrive(DRIVE_SPEED, 'r', 60.0, stdTimeOut);
@@ -184,6 +189,11 @@ public class AutonomieSenzordeCuloareFTC extends LinearOpMode {
         robot.backLeft.setPower(0);
         robot.backRight.setPower(0);
 
+        robot.frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         indexLine++;
 
     }
@@ -235,6 +245,11 @@ public class AutonomieSenzordeCuloareFTC extends LinearOpMode {
         robot.backLeft.setPower(0);
         robot.backRight.setPower(0);
 
+        robot.frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         indexLine++;
     }
 
@@ -244,6 +259,7 @@ public class AutonomieSenzordeCuloareFTC extends LinearOpMode {
         robot.frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     void printLineDone(int value)
@@ -252,7 +268,37 @@ public class AutonomieSenzordeCuloareFTC extends LinearOpMode {
         telemetry.update();
     }
 
-    boolean isSkystone () {
+    void armLift(char direction, double degrees)
+    {
+        double speed = 0.3;
+        int targetPositionDown = -(int)(degrees * COUNTS_PER_MOTOR_ARM);
+        int targetPositionUp = (int)(degrees * COUNTS_PER_MOTOR_ARM);
+
+
+            resetEncoder();
+
+            robot.armMotor.setTargetPosition(targetPositionDown);
+
+            robot.armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            robot.armMotor.setPower(speed);
+
+            runtime.reset();
+
+            while(robot.armMotor.isBusy() && (runtime.seconds() < 5.0))
+            {
+
+                idle();
+            }
+
+            robot.armMotor.setPower(0);
+
+            robot.armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+    }
+
+    boolean isSkystone ()
+    {
         boolean ok = false;
         double alphared = (double)(robot.colorSensor.alpha())/robot.colorSensor.red();
         if (alphared>=2.5) {

@@ -40,3 +40,9 @@ Am reusit:
 
  Am reusit:
     -tot
+
+ 31/10/2019
+    -ops am uitat sa scriu:))))
+    -facem teleOp pentru noua versione de robot (V1000 sau plm)
+    -mai lucram la autonomie, trebuie scrisa o functie pentru brat(pe encodere sau PID, sau amandoua)
+    -merge servoul pe orizontala

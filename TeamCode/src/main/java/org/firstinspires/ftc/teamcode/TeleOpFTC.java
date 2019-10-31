@@ -98,23 +98,26 @@ public class TeleOpFTC extends OpMode
         double speedRight = -gamepad1.left_stick_y - gamepad1.left_stick_x;
         double strafePower = 0.25;
 
+        speedLeft /= 2;
+        speedRight /= 2;
 
-        //telemetry.addData(robot.frontLeft.getCurrentPosition());
-        if(gamepad1.a)
+        if(gamepad1.b)
         {
-            strafePower /= 4;
-            speedLeft /= 4;
-            speedRight /= 4;
+
+            strafePower /= 2;
+            speedLeft /= 2;
+            speedRight /= 2;
+
         }
 
 
-        if (gamepad1.dpad_left) {
+        if (gamepad1.left_bumper) {
             robot.frontLeft.setPower(-strafePower);
             robot.frontRight.setPower(-strafePower);
             robot.backLeft.setPower(strafePower);
             robot.backRight.setPower(strafePower);
         }
-        else if (gamepad1.dpad_right) {
+        else if (gamepad1.right_bumper) {
             robot.frontLeft.setPower(strafePower);
             robot.frontRight.setPower(strafePower);
             robot.backLeft.setPower(-strafePower);
@@ -126,8 +129,8 @@ public class TeleOpFTC extends OpMode
             robot.backLeft.setPower(speedLeft);
             robot.backRight.setPower(-speedRight);
 
-            //telemetry.addData("motoare gay: ", "%f | %f", speedLeft, speedRight);
-            //telemetry.update();
+            telemetry.addData("motoare gay: ", "%f | %f", speedLeft, speedRight);
+            telemetry.update();
         }
         else {
             robot.frontLeft.setPower(0);
@@ -136,19 +139,43 @@ public class TeleOpFTC extends OpMode
             robot.backRight.setPower(0);
         }
 
-        if(gamepad1.dpad_down)
-        {
-            robot.servoCub.setPosition(0.3);
+        if (gamepad1.dpad_right) {
+            robot.xServo.setPower(1);
         }
-        else if(gamepad1.dpad_up)
-        {
-            robot.servoCub.setPosition(0.85);
+        else if (gamepad1.dpad_left) {
+            robot.xServo.setPower(-1);
         }
-        else if(gamepad1.y)
-        {
-            robot.servoCub.setPosition(1);
+        else {
+            robot.xServo.setPower(0);
         }
 
+/*
+        if(gamepad1.dpad_down)
+        {
+            robot.liftRight.setPower(-1);
+            robot.liftLeft.setPower(-1);
+        }
+        else if (gamepad1.dpad_up)
+        {
+            robot.liftRight.setPower(1);
+            robot.liftLeft.setPower(1);
+        }
+        else
+        {
+            robot.liftLeft.setPower(0);
+            robot.liftRight.setPower(0);
+        }*/
+
+      /*  if (gamepad1.a) //INCHIS
+        {
+            robot.servoCub.setPower(0.7);
+        }
+
+        if (gamepad1.y) //DESCHIS
+        {
+            robot.servoCub.setPower(0.1);
+        }
+            */
         double alphared = (double)(robot.colorSensor.alpha())/robot.colorSensor.red();
         double alphagreen = robot.colorSensor.alpha()/robot.colorSensor.green();
         double alphablue = robot.colorSensor.alpha()/robot.colorSensor.blue();
