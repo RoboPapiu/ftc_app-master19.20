@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -14,7 +15,9 @@ public class HardwareMapFTC
     public DcMotor frontRight = null;
     public DcMotor backLeft = null;
     public DcMotor backRight = null;
-    public DcMotor armMotor = null;
+    public DcMotor armMotor = null; //Hex HD,  pt verticala (axa X)
+    public DcMotor armMotorRight = null; //Hex de 40, pt uracare pe axa Y
+    public DcMotor armMotorLeft = null; // Hex de 40,  pt uracare  pe axa Y
 
     public CRServo xServo = null;
     public Servo servoFoundation0 = null;
@@ -45,35 +48,44 @@ public class HardwareMapFTC
         backRight = hwMap.get(DcMotor.class, "backRight");
 
         armMotor = hwMap.get(DcMotor.class, "armMotor");
+        armMotorRight = hwMap.get(DcMotor.class, "armMotorRight");
+        armMotorLeft = hwMap.get(DcMotor.class, "armMotorLeft");
 
 
-
+        //Motoare miscare
         frontLeft.setPower(0);
         frontRight.setPower(0);
         backLeft.setPower(0);
         backRight.setPower(0);
-
-        armMotor.setPower(0);
 
         frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        //Motoare brat
+        armMotor.setPower(0);
+        armMotorRight.setPower(0);
+        armMotorLeft.setPower(0);
+
         armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        armMotorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        armMotorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+       // armMotorRight.setMode(DcMotor.Direction.REVERSE);
 
         //Servo AICI
 
         servoCub = hwMap.get(Servo.class, "servoCub");
-        servoCub.setPosition(0.1);
+       // servoCub.setPosition(0.1);
 
         xServo = hwMap.get(CRServo.class, "xServo");
-        xServo.setPower(0);
+       // xServo.setPower(0);
 
         servoFoundation0 = hwMap.get(Servo.class, "servoFoundation0");
-        servoFoundation0.setPosition(1);
+      //  servoFoundation0.setPosition(1);
         servoFoundation1 = hwMap.get(Servo.class, "servoFoundation1");
-        servoFoundation1.setPosition(0);
+       // servoFoundation1.setPosition(0);
 
         //Senzor de culoare AICI
 

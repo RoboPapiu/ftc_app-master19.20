@@ -54,3 +54,8 @@ Am reusit:
 
 4/11/2019
     - test servo ghetto facut de marc pt mutaree platforma :)))
+
+6/11/2019
+    - am cosntruit varianta finala a robotului cu glisiere
+    - cablurile pentru servo si motor inca nu le-am prins calumea
+    - am scris teleopul pe 2 controllere

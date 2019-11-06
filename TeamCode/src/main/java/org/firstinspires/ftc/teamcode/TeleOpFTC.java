@@ -98,14 +98,14 @@ public class TeleOpFTC extends OpMode
         double speedRight = -gamepad1.left_stick_y - gamepad1.left_stick_x;
         double strafePower = 0.25;
 
-        double armPower = gamepad1.right_stick_y;
+        double armPowerY = 0.5;
+        double armPowerX = 0.5;
 
-        telemetry.addData("armPower:", armPower);
+        telemetry.addData("armPower:", armPowerY);
         telemetry.update();
 
         speedLeft /= 2;
         speedRight /= 2;
-        armPower /= 2;
 
         if(gamepad1.b)
         {
@@ -113,8 +113,8 @@ public class TeleOpFTC extends OpMode
             strafePower /= 2;
             speedLeft /= 2;
             speedRight /= 2;
-            armPower /= 2;
-
+            armPowerY /= 2;
+            armPowerX /= 2;
         }
 
 
@@ -146,32 +146,55 @@ public class TeleOpFTC extends OpMode
             robot.backRight.setPower(0);
         }
 
-        if (gamepad1.dpad_right) {
+        if (gamepad2.dpad_right) {
             robot.xServo.setPower(1);
         }
-        else if (gamepad1.dpad_left) {
+        else if (gamepad2.dpad_left) {
             robot.xServo.setPower(-1);
         }
         else {
             robot.xServo.setPower(0);
         }
 
-        if(armPower!=0) {
-            robot.armMotor.setPower(armPower);
+        if(gamepad2.dpad_up) {
+            robot.armMotorRight.setPower(-armPowerY);
+            robot.armMotorLeft.setPower(armPowerY);
+        }
+        else if(gamepad2.dpad_down)
+        {
+            robot.armMotorRight.setPower(armPowerY);
+            robot.armMotorLeft.setPower(-armPowerY);
         }
         else {
-            //robot.armMotor.setPower(-0.01);
-            robot.armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            robot.armMotorRight.setPower(0);
+            robot.armMotorLeft.setPower(0);
         }
 
-        if (gamepad1.dpad_down) {
+        if(gamepad2.a)
+        {
+            robot.armMotor.setPower(-armPowerX);
+        }
+        else if(gamepad2.y)
+        {
+            robot.armMotor.setPower(armPowerX);
+        }
+        else
+        {
+            robot.armMotor.setPower(0);
+        }
+
+
+        if (gamepad2.left_bumper)
+        {
             robot.servoCub.setPosition(0.8);
         }
-        else if (gamepad1.dpad_up) {
+        else if (gamepad2.right_bumper)
+        {
             robot.servoCub.setPosition(0.4);
         }
 
-        if (gamepad1.x) {
+        if (gamepad1.x)
+        {
             robot.servoFoundation1.setPosition(0.7);
             robot.servoFoundation0.setPosition(0.3);
         }
@@ -183,8 +206,7 @@ public class TeleOpFTC extends OpMode
 
 
 
-
-        double alphared = (double)(robot.colorSensor.alpha())/robot.colorSensor.red();
+    /*    double alphared = (double)(robot.colorSensor.alpha())/robot.colorSensor.red();
         double alphagreen = robot.colorSensor.alpha()/robot.colorSensor.green();
         double alphablue = robot.colorSensor.alpha()/robot.colorSensor.blue();
 
@@ -197,7 +219,7 @@ public class TeleOpFTC extends OpMode
         telemetry.addData("alphablue: ", alphablue);
         telemetry.addData("rightspeed: ", speedRight);
         telemetry.addData("leftspeed: ", speedLeft);
-        telemetry.update();
+        telemetry.update(); */
 
     }
 
@@ -219,31 +241,31 @@ public class TeleOpFTC extends OpMode
         robot.armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
-    void armLiftDegrees(int degrees)
-    {
-        degrees *= 3;
-        final double     COUNTS_PER_MOTOR_ARM    = 288.0;
-        double speed = 0.3;
-        int targetPosition = (int)(degrees * COUNTS_PER_MOTOR_ARM);
-
-        resetEncoder();
-
-        robot.armMotor.setTargetPosition(targetPosition);
-
-        robot.armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        robot.armMotor.setPower(speed);
-
-        runtime.reset();
-
-        while(robot.armMotor.isBusy() && (runtime.seconds() < 5.0))
-        {
-            Thread.yield();
-        }
-
-        robot.armMotor.setPower(0);
-
-        robot.armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-    }
+//    void armLiftDegrees(int degrees)
+//    {
+//        degrees *= 3;
+//        final double     COUNTS_PER_MOTOR_ARM    = 288.0;
+//        double speed = 0.3;
+//        int targetPosition = (int)(degrees * COUNTS_PER_MOTOR_ARM);
+//
+//        resetEncoder();
+//
+//        robot.armMotor.setTargetPosition(targetPosition);
+//
+//        robot.armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//
+//        robot.armMotor.setPower(speed);
+//
+//        runtime.reset();
+//
+//        while(robot.armMotor.isBusy() && (runtime.seconds() < 5.0))
+//        {
+//            Thread.yield();
+//        }
+//
+//        robot.armMotor.setPower(0);
+//
+//        robot.armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//    }
 
 }
