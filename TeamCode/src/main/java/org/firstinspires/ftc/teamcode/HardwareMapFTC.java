@@ -17,11 +17,8 @@ public class HardwareMapFTC
     public DcMotor armMotor = null;
 
     public CRServo xServo = null;
-
-    /*
-    public DcMotor liftLeft = null;
-    public DcMotor liftRight = null;
-*/
+    public Servo servoFoundation0 = null;
+    public Servo servoFoundation1 = null;
     public Servo servoCub = null;
 
     public ColorSensor colorSensor = null;
@@ -49,6 +46,8 @@ public class HardwareMapFTC
 
         armMotor = hwMap.get(DcMotor.class, "armMotor");
 
+
+
         frontLeft.setPower(0);
         frontRight.setPower(0);
         backLeft.setPower(0);
@@ -70,6 +69,11 @@ public class HardwareMapFTC
 
         xServo = hwMap.get(CRServo.class, "xServo");
         xServo.setPower(0);
+
+        servoFoundation0 = hwMap.get(Servo.class, "servoFoundation0");
+        servoFoundation0.setPosition(1);
+        servoFoundation1 = hwMap.get(Servo.class, "servoFoundation1");
+        servoFoundation1.setPosition(0);
 
         //Senzor de culoare AICI
 

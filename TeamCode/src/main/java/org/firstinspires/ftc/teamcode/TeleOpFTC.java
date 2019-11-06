@@ -98,8 +98,14 @@ public class TeleOpFTC extends OpMode
         double speedRight = -gamepad1.left_stick_y - gamepad1.left_stick_x;
         double strafePower = 0.25;
 
+        double armPower = gamepad1.right_stick_y;
+
+        telemetry.addData("armPower:", armPower);
+        telemetry.update();
+
         speedLeft /= 2;
         speedRight /= 2;
+        armPower /= 2;
 
         if(gamepad1.b)
         {
@@ -107,6 +113,7 @@ public class TeleOpFTC extends OpMode
             strafePower /= 2;
             speedLeft /= 2;
             speedRight /= 2;
+            armPower /= 2;
 
         }
 
@@ -149,33 +156,34 @@ public class TeleOpFTC extends OpMode
             robot.xServo.setPower(0);
         }
 
-/*
-        if(gamepad1.dpad_down)
-        {
-            robot.liftRight.setPower(-1);
-            robot.liftLeft.setPower(-1);
+        if(armPower!=0) {
+            robot.armMotor.setPower(armPower);
         }
-        else if (gamepad1.dpad_up)
-        {
-            robot.liftRight.setPower(1);
-            robot.liftLeft.setPower(1);
-        }
-        else
-        {
-            robot.liftLeft.setPower(0);
-            robot.liftRight.setPower(0);
-        }*/
-
-      /*  if (gamepad1.a) //INCHIS
-        {
-            robot.servoCub.setPower(0.7);
+        else {
+            //robot.armMotor.setPower(-0.01);
+            robot.armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
 
-        if (gamepad1.y) //DESCHIS
-        {
-            robot.servoCub.setPower(0.1);
+        if (gamepad1.dpad_down) {
+            robot.servoCub.setPosition(0.8);
         }
-            */
+        else if (gamepad1.dpad_up) {
+            robot.servoCub.setPosition(0.4);
+        }
+
+        if (gamepad1.x) {
+            robot.servoFoundation1.setPosition(0.7);
+            robot.servoFoundation0.setPosition(0.3);
+        }
+        else if (gamepad1.y) {
+            robot.servoFoundation1.setPosition(0);
+            robot.servoFoundation0.setPosition(1);
+        }
+
+
+
+
+
         double alphared = (double)(robot.colorSensor.alpha())/robot.colorSensor.red();
         double alphagreen = robot.colorSensor.alpha()/robot.colorSensor.green();
         double alphablue = robot.colorSensor.alpha()/robot.colorSensor.blue();
@@ -187,6 +195,8 @@ public class TeleOpFTC extends OpMode
         telemetry.addData("alphared: ", alphared);
         telemetry.addData("alphagreen: ", alphagreen);
         telemetry.addData("alphablue: ", alphablue);
+        telemetry.addData("rightspeed: ", speedRight);
+        telemetry.addData("leftspeed: ", speedLeft);
         telemetry.update();
 
     }
@@ -198,6 +208,42 @@ public class TeleOpFTC extends OpMode
      */
     @Override
     public void stop() {
+    }
+
+    void resetEncoder()
+    {
+        robot.frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
+
+    void armLiftDegrees(int degrees)
+    {
+        degrees *= 3;
+        final double     COUNTS_PER_MOTOR_ARM    = 288.0;
+        double speed = 0.3;
+        int targetPosition = (int)(degrees * COUNTS_PER_MOTOR_ARM);
+
+        resetEncoder();
+
+        robot.armMotor.setTargetPosition(targetPosition);
+
+        robot.armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        robot.armMotor.setPower(speed);
+
+        runtime.reset();
+
+        while(robot.armMotor.isBusy() && (runtime.seconds() < 5.0))
+        {
+            Thread.yield();
+        }
+
+        robot.armMotor.setPower(0);
+
+        robot.armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
 }

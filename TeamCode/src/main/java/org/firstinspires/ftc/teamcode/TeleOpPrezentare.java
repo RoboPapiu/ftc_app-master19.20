@@ -75,21 +75,47 @@ public class TeleOpPrezentare extends OpMode
     @Override
     public void loop() {
 
-        double speedRight = -gamepad1.left_stick_y + gamepad1.left_stick_x;
-        double speedLeft = -gamepad1.left_stick_y - gamepad1.left_stick_x;
+        double speedLeft = -gamepad1.left_stick_y + gamepad1.left_stick_x;
+        double speedRight = -gamepad1.left_stick_y - gamepad1.left_stick_x;
+        double strafePower = 0.25;
 
-        if (gamepad1.a) {
-            speedLeft /= 4;
-            speedRight /= 4;
+        double armPower = gamepad1.right_stick_y;
+
+        speedLeft /= 2;
+        speedRight /= 2;
+        armPower /= 2;
+
+        if(gamepad1.b)
+        {
+
+            strafePower /= 2;
+            speedLeft /= 2;
+            speedRight /= 2;
+            armPower /= 2;
+
         }
 
 
-        //MISCARE
-        if (speedLeft != 0 || speedRight != 0) {
-            robot.frontLeft.setPower(-speedLeft);
-            robot.frontRight.setPower(speedRight);
-            robot.backLeft.setPower(-speedLeft);
-            robot.backRight.setPower(speedRight);
+        if (gamepad1.left_bumper) {
+            robot.frontLeft.setPower(-strafePower);
+            robot.frontRight.setPower(-strafePower);
+            robot.backLeft.setPower(strafePower);
+            robot.backRight.setPower(strafePower);
+        }
+        else if (gamepad1.right_bumper) {
+            robot.frontLeft.setPower(strafePower);
+            robot.frontRight.setPower(strafePower);
+            robot.backLeft.setPower(-strafePower);
+            robot.backRight.setPower(-strafePower);
+        }
+        else if (speedLeft != 0 || speedRight != 0) {
+            robot.frontLeft.setPower(speedLeft);
+            robot.frontRight.setPower(-speedRight);
+            robot.backLeft.setPower(speedLeft);
+            robot.backRight.setPower(-speedRight);
+
+            telemetry.addData("motoare gay: ", "%f | %f", speedLeft, speedRight);
+            telemetry.update();
         }
         else {
             robot.frontLeft.setPower(0);
@@ -98,36 +124,6 @@ public class TeleOpPrezentare extends OpMode
             robot.backRight.setPower(0);
         }
 
-        //SERVO CUB
-        if (gamepad1.dpad_down)
-        {
-            robot.servoCub.setPosition(0.47);
-           // telemetry.addData("servo gay", "1");
-           // telemetry.update();
-
-        }
-        else if (gamepad1.dpad_up)
-        {
-            robot.servoCub.setPosition(0);
-           // telemetry.addData("servo gay", "0");
-           // telemetry.update();
-        }
-        else if(gamepad1.y)
-            robot.servoCub.setPosition(0.8);
-
-
-        //BRAT
-        if (gamepad1.right_bumper) {
-            robot.bratMotor1.setPower(1);
-            robot.bratMotor2.setPower(1);
-        } else if (gamepad1.left_bumper) {
-            robot.bratMotor1.setPower(-1);
-            robot.bratMotor2.setPower(-1);
-        }
-        else {
-            robot.bratMotor1.setPower(0);
-            robot.bratMotor2.setPower(0);
-        }
 
     }
 

@@ -59,6 +59,12 @@ public class AutonomieSenzordeCuloareFTC extends LinearOpMode {
             telemetry.addData("alpha: ",  robot.colorSensor.alpha());
             telemetry.update();
 
+
+            robot.servoFoundation0.setPosition(0.3);
+            robot.servoFoundation1.setPosition(0.7);
+
+            sleep(10000000);
+
             //72 cm fata, index 1 (stiu marc ca trebuie 0, dar cacatul asta de cod il face sa fie 1, incrementeaza indexLine in encoderDrive)
             encoderDrive(DRIVE_SPEED, 71.5, 71.5, stdTimeOut);
             printLineDone(indexLine); //functie scisa de mine (aka Dragos) uitate ce face, e super easy, dar ajuta destul de mult, e jos jos
@@ -268,32 +274,31 @@ public class AutonomieSenzordeCuloareFTC extends LinearOpMode {
         telemetry.update();
     }
 
-    void armLift(char direction, double degrees)
+    void armLift(double degrees)
     {
+        degrees *= 6;
         double speed = 0.3;
-        int targetPositionDown = -(int)(degrees * COUNTS_PER_MOTOR_ARM);
-        int targetPositionUp = (int)(degrees * COUNTS_PER_MOTOR_ARM);
+        int targetPosition = (int)(degrees * COUNTS_PER_MOTOR_ARM);
+//        int targetPositionUp = (int)(degrees * COUNTS_PER_MOTOR_ARM);
 
+        resetEncoder();
 
-            resetEncoder();
+        robot.armMotor.setTargetPosition(targetPosition);
 
-            robot.armMotor.setTargetPosition(targetPositionDown);
+        robot.armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-            robot.armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.armMotor.setPower(speed);
 
-            robot.armMotor.setPower(speed);
+        runtime.reset();
 
-            runtime.reset();
+        while(robot.armMotor.isBusy() && (runtime.seconds() < 5.0))
+        {
+            idle();
+        }
 
-            while(robot.armMotor.isBusy() && (runtime.seconds() < 5.0))
-            {
+        robot.armMotor.setPower(0);
 
-                idle();
-            }
-
-            robot.armMotor.setPower(0);
-
-            robot.armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
     }
 
