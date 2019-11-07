@@ -1,15 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.provider.Telephony;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name="AutonomieDreaptaFTC", group="FTC")
+@Autonomous(name="AutonomieStangaFTC", group="FTC")
 //@Disabled
-public class AutonomieSenzordeCuloareFTC extends LinearOpMode {
+public class AutonomieLeftFTC extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareMapFTC         robot   = new HardwareMapFTC();   // Use a Pushbot's hardware
@@ -53,17 +52,17 @@ public class AutonomieSenzordeCuloareFTC extends LinearOpMode {
         if(opModeIsActive()) {
 
 
-            telemetry.addData("red: ",  robot.colorSensor.red());
-            telemetry.addData("green: ",  robot.colorSensor.green());
-            telemetry.addData("blue: ",  robot.colorSensor.blue());
-            telemetry.addData("alpha: ",  robot.colorSensor.alpha());
+            telemetry.addData("red: ",  robot.colorSensorLeft.red());
+            telemetry.addData("green: ",  robot.colorSensorLeft.green());
+            telemetry.addData("blue: ",  robot.colorSensorLeft.blue());
+            telemetry.addData("alpha: ",  robot.colorSensorLeft.alpha());
+            double alphaRed = (double)(robot.colorSensorLeft.alpha())/robot.colorSensorLeft.red();
+            telemetry.addData("alphaRed: ", alphaRed);
             telemetry.update();
-
 
             robot.servoFoundation0.setPosition(0.3);
             robot.servoFoundation1.setPosition(0.7);
 
-            sleep(10000000);
 
             //72 cm fata, index 1 (stiu marc ca trebuie 0, dar cacatul asta de cod il face sa fie 1, incrementeaza indexLine in encoderDrive)
             encoderDrive(DRIVE_SPEED, 71.5, 71.5, stdTimeOut);
@@ -105,7 +104,7 @@ public class AutonomieSenzordeCuloareFTC extends LinearOpMode {
 
                 else {
 
-                    strafeDrive(DRIVE_SPEED, 'r', 23, stdTimeOut);
+                    strafeDrive(DRIVE_SPEED, 'l', 23, stdTimeOut);
                     printLineDone(indexLine);
                     sleep(1000);
                     strafeLeft += 24.0;
@@ -121,7 +120,7 @@ public class AutonomieSenzordeCuloareFTC extends LinearOpMode {
 
 
             //210 cm strafe stange, index 4
-            strafeDrive(DRIVE_SPEED, 'l', strafeLeft, stdTimeOut);
+            strafeDrive(DRIVE_SPEED, 'r', strafeLeft, stdTimeOut);
             printLineDone(indexLine);
             sleep(1000);
 
@@ -134,7 +133,7 @@ public class AutonomieSenzordeCuloareFTC extends LinearOpMode {
             encoderDrive(DRIVE_SPEED, -15.0, -15.0, stdTimeOut);
             sleep(1000);
 
-            strafeDrive(DRIVE_SPEED, 'r', 60.0, stdTimeOut);
+            strafeDrive(DRIVE_SPEED, 'l', 60.0, stdTimeOut);
 
             sleep(100000000); //e un sleep sa nu termine programul si sa vad inca pe  ecran tot ce vreu de la telemetry, sterge-l daca vrei
 
@@ -305,7 +304,7 @@ public class AutonomieSenzordeCuloareFTC extends LinearOpMode {
     boolean isSkystone ()
     {
         boolean ok = false;
-        double alphared = (double)(robot.colorSensor.alpha())/robot.colorSensor.red();
+        double alphared = (double)(robot.colorSensorLeft.alpha())/robot.colorSensorLeft.red();
         if (alphared>=2.5) {
             ok = true;
         }

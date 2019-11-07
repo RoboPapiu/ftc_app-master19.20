@@ -102,6 +102,7 @@ public class TeleOpFTC extends OpMode
         double armPowerX = 0.5;
 
         telemetry.addData("armPower:", armPowerY);
+        telemetry.addData("speedLeft: ", speedLeft);
         telemetry.update();
 
         speedLeft /= 2;
@@ -144,6 +145,10 @@ public class TeleOpFTC extends OpMode
             robot.frontRight.setPower(0);
             robot.backLeft.setPower(0);
             robot.backRight.setPower(0);
+            robot.frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            robot.backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            robot.frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            robot.backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
 
         if (gamepad2.dpad_right) {
