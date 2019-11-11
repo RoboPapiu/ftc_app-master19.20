@@ -25,9 +25,10 @@ public class AutonomieSenzordeCuloareFTC extends LinearOpMode {
     static final double     stdTimeOut              = 5.0;
     int                     indexLine               = 0;
     double                  strafeLeft              = 140.0;
-    int                     inde = 0;
 
     static final double     COUNTS_PER_MOTOR_ARM    = 288.0;
+    static final double     COUNTS_PER_LIFT_MOTOR   = 1120.0;
+    static final double     LIFT_ARM_REDUCTION      = 45.0/125.0;
 
     @Override
     public void runOpMode() {
@@ -47,6 +48,11 @@ public class AutonomieSenzordeCuloareFTC extends LinearOpMode {
         robot.backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+        robot.armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.armMotorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.armMotorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -62,11 +68,16 @@ public class AutonomieSenzordeCuloareFTC extends LinearOpMode {
 
             robot.servoFoundation0.setPosition(0.3);
             robot.servoFoundation1.setPosition(0.7);
+            robot.servoAutonomous.setPosition(0.2);
+            sleep(2000);
+            robot.servoAutonomous.setPosition(0.85);
 
-            sleep(10000000);
+            telemetry.addData("am teminat", "am treaba cu fetizele la 3");
+            telemetry.update();
+            sleep(20000000);
 
             //72 cm fata, index 1 (stiu marc ca trebuie 0, dar cacatul asta de cod il face sa fie 1, incrementeaza indexLine in encoderDrive)
-            encoderDrive(DRIVE_SPEED, 71.5, 71.5, stdTimeOut);
+            encoderDrive(DRIVE_SPEED, 68, 68, stdTimeOut);
             printLineDone(indexLine); //functie scisa de mine (aka Dragos) uitate ce face, e super easy, dar ajuta destul de mult, e jos jos
             sleep(1500);
 
@@ -85,54 +96,48 @@ public class AutonomieSenzordeCuloareFTC extends LinearOpMode {
 
                 sleep(101);
 
-                if (isSkystone()) {
-
-                    //robot.servoCub.setPosition(1);
-                    sleep(1000);
-
+                if (isSkystone())
+                {
                     break;
-/*
-                    encoderDrive(DRIVE_SPEED, -50.0, -50.0, stdTimeOut);
-                    printLineDone(indexLine);
-                    sleep(1000);
-
-
-                    strafeDrive(DRIVE_SPEED, 'l', 230.0, stdTimeOut);
-                    printLineDone(indexLine);
-                    sleep(1000);*/
-
                 }
-
-                else {
-
+                else
+                    {
                     strafeDrive(DRIVE_SPEED, 'r', 23, stdTimeOut);
                     printLineDone(indexLine);
-                    sleep(1000);
-                    strafeLeft += 24.0;
 
-                }
+                    sleep(500);
+                    strafeLeft += 24.0;
+                    }
 
             }
 
-            //30 cm spate, index 3
+            strafeDrive(DRIVE_SPEED, 'r', 13, stdTimeOut);
+            sleep(2000);
+
+
+
+            sleep(500);
+
+            //50 cm spate
             encoderDrive(DRIVE_SPEED, -50.0, -50.0, stdTimeOut);
             printLineDone(indexLine);
-            sleep(1000);
+            sleep(500);
 
 
-            //210 cm strafe stange, index 4
+            //face strafe exact cat a mers in spre skystone
             strafeDrive(DRIVE_SPEED, 'l', strafeLeft, stdTimeOut);
             printLineDone(indexLine);
-            sleep(1000);
+            sleep(500);
 
-            //lasa cubul cu servo
+            //
             //robot.servoCub.setPosition(0.3);
-            sleep(1000);
+            sleep(500);
 
             encoderDrive(DRIVE_SPEED, 65, 65, stdTimeOut);
+            sleep(500);
 
             encoderDrive(DRIVE_SPEED, -15.0, -15.0, stdTimeOut);
-            sleep(1000);
+            sleep(500);
 
             strafeDrive(DRIVE_SPEED, 'r', 60.0, stdTimeOut);
 
@@ -274,31 +279,39 @@ public class AutonomieSenzordeCuloareFTC extends LinearOpMode {
         telemetry.update();
     }
 
-    void armLift(double degrees)
+    void armHorizontal(double time, int direction)
     {
-        degrees *= 6;
-        double speed = 0.3;
-        int targetPosition = (int)(degrees * COUNTS_PER_MOTOR_ARM);
-//        int targetPositionUp = (int)(degrees * COUNTS_PER_MOTOR_ARM);
-
-        resetEncoder();
-
-        robot.armMotor.setTargetPosition(targetPosition);
-
-        robot.armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        robot.armMotor.setPower(speed);
+        //1 pt fata, -1 pt spate, sorin e gay
 
         runtime.reset();
+        while (runtime.seconds() < time)
+            robot.armMotor.setPower(0.3 * direction);
+        robot.armMotor.setPower(0);
+    }
 
-        while(robot.armMotor.isBusy() && (runtime.seconds() < 5.0))
-        {
+    void armLift(double liftDistance)
+    {
+
+        int targetLiftDistance = (int)(liftDistance * LIFT_ARM_REDUCTION * COUNTS_PER_LIFT_MOTOR);
+
+        robot.armMotorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.armMotorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        robot.armMotorLeft.setTargetPosition(targetLiftDistance);
+        robot.armMotorRight.setTargetPosition(-targetLiftDistance);
+
+        robot.armMotorLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.armMotorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        robot.armMotorLeft.setPower(0.5);
+        robot.armMotorRight.setPower(0.5);
+
+        while (robot.armMotorRight.isBusy() && robot.armMotorLeft.isBusy()) {
             idle();
         }
 
-        robot.armMotor.setPower(0);
-
-        robot.armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.armMotorLeft.setPower(0);
+        robot.armMotorRight.setPower(0);
 
     }
 

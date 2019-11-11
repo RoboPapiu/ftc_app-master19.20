@@ -98,11 +98,13 @@ public class TeleOpFTC extends OpMode
         double speedRight = -gamepad1.left_stick_y - gamepad1.left_stick_x;
         double strafePower = 0.25;
 
-        double armPowerY = 0.5;
+        double armPowerY = 0.75;
         double armPowerX = 0.5;
 
         telemetry.addData("armPower:", armPowerY);
-        telemetry.addData("speedLeft: ", speedLeft);
+        telemetry.addData("speedLeft: ", speedLeft);/*
+        telemetry.addData("Ticks Lift: ", robot.armMotorLeft.getCurrentPosition());
+        telemetry.addData("Ticks Expand: ", robot.armMotor.getCurrentPosition());*/
         telemetry.update();
 
         speedLeft /= 2;
@@ -161,11 +163,11 @@ public class TeleOpFTC extends OpMode
             robot.xServo.setPower(0);
         }
 
-        if(gamepad2.dpad_up) {
+        if(gamepad2.dpad_down) {
             robot.armMotorRight.setPower(-armPowerY);
             robot.armMotorLeft.setPower(armPowerY);
         }
-        else if(gamepad2.dpad_down)
+        else if(gamepad2.dpad_up)
         {
             robot.armMotorRight.setPower(armPowerY);
             robot.armMotorLeft.setPower(-armPowerY);
@@ -191,7 +193,7 @@ public class TeleOpFTC extends OpMode
 
         if (gamepad2.left_bumper)
         {
-            robot.servoCub.setPosition(0.8);
+            robot.servoCub.setPosition(0.87);
         }
         else if (gamepad2.right_bumper)
         {

@@ -59,3 +59,7 @@ Am reusit:
     - am cosntruit varianta finala a robotului cu glisiere
     - cablurile pentru servo si motor inca nu le-am prins calumea
     - am scris teleopul pe 2 controllere
+
+11/11/2019
+    -autonomii cele in care fiecare isi vede de treaba lui si numa parcare
+    -joaca cu robotul (sorin marc, silviu probabil ii va omora pe cei doi daca ii stica ceva minor sau major)

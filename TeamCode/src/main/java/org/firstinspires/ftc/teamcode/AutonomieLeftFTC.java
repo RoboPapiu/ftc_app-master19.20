@@ -27,6 +27,8 @@ public class AutonomieLeftFTC extends LinearOpMode {
     int                     inde = 0;
 
     static final double     COUNTS_PER_MOTOR_ARM    = 288.0;
+    static final double     COUNTS_PER_LIFT_MOTOR   = 1120.0;
+    static final double     LIFT_ARM_REDUCTION      = 45.0/125.0;
 
     @Override
     public void runOpMode() {
@@ -47,6 +49,11 @@ public class AutonomieLeftFTC extends LinearOpMode {
         robot.backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 
+        robot.armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.armMotorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.armMotorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         if(opModeIsActive()) {
@@ -63,9 +70,18 @@ public class AutonomieLeftFTC extends LinearOpMode {
             robot.servoFoundation0.setPosition(0.3);
             robot.servoFoundation1.setPosition(0.7);
 
+            sleep(100);
+
+            armLift(0.1);
+
+            sleep(1000);
+
+            armLift(-0.1);
+
+            sleep(10000);
 
             //72 cm fata, index 1 (stiu marc ca trebuie 0, dar cacatul asta de cod il face sa fie 1, incrementeaza indexLine in encoderDrive)
-            encoderDrive(DRIVE_SPEED, 71.5, 71.5, stdTimeOut);
+            encoderDrive(DRIVE_SPEED, 68, 68, stdTimeOut);
             printLineDone(indexLine); //functie scisa de mine (aka Dragos) uitate ce face, e super easy, dar ajuta destul de mult, e jos jos
             sleep(1500);
 
@@ -82,7 +98,7 @@ public class AutonomieLeftFTC extends LinearOpMode {
                 telemetry.addData("alphared: ", alphared);
                 telemetry.update();
 
-                sleep(101);
+                sleep(100);
 
                 if (isSkystone()) {
 
@@ -273,31 +289,29 @@ public class AutonomieLeftFTC extends LinearOpMode {
         telemetry.update();
     }
 
-    void armLift(double degrees)
+    void armLift(double liftDistance)
     {
-        degrees *= 6;
-        double speed = 0.3;
-        int targetPosition = (int)(degrees * COUNTS_PER_MOTOR_ARM);
-//        int targetPositionUp = (int)(degrees * COUNTS_PER_MOTOR_ARM);
 
-        resetEncoder();
+        int targetLiftDistance = (int)(liftDistance * LIFT_ARM_REDUCTION * COUNTS_PER_LIFT_MOTOR);
 
-        robot.armMotor.setTargetPosition(targetPosition);
+        robot.armMotorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.armMotorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        robot.armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.armMotorLeft.setTargetPosition(targetLiftDistance);
+        robot.armMotorRight.setTargetPosition(-targetLiftDistance);
 
-        robot.armMotor.setPower(speed);
+        robot.armMotorLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.armMotorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        runtime.reset();
+        robot.armMotorLeft.setPower(0.5);
+        robot.armMotorRight.setPower(0.5);
 
-        while(robot.armMotor.isBusy() && (runtime.seconds() < 5.0))
-        {
+        while (robot.armMotorRight.isBusy() && robot.armMotorLeft.isBusy()) {
             idle();
         }
 
-        robot.armMotor.setPower(0);
-
-        robot.armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.armMotorLeft.setPower(0);
+        robot.armMotorRight.setPower(0);
 
     }
 

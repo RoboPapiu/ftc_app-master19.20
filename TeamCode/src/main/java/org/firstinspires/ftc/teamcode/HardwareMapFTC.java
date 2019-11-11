@@ -23,6 +23,7 @@ public class HardwareMapFTC
     public Servo servoFoundation0 = null;
     public Servo servoFoundation1 = null;
     public Servo servoCub = null;
+    public Servo servoAutonomous = null;
 
     public ColorSensor colorSensor = null;
     public ColorSensor colorSensorLeft = null;
@@ -81,6 +82,9 @@ public class HardwareMapFTC
 
         xServo = hwMap.get(CRServo.class, "xServo");
        // xServo.setPower(0);
+
+        servoAutonomous = hwMap.get(Servo.class, "servoAutonomous");
+//        servoAutonomous
 
         servoFoundation0 = hwMap.get(Servo.class, "servoFoundation0");
       //  servoFoundation0.setPosition(1);
