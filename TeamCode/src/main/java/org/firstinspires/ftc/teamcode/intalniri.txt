@@ -63,3 +63,10 @@ Am reusit:
 11/11/2019
     -autonomii cele in care fiecare isi vede de treaba lui si numa parcare
     -joaca cu robotul (sorin marc, silviu probabil ii va omora pe cei doi daca ii stica ceva minor sau major)
+
+12/11/2019
+    -lucru la autonomii (loading zone)
+
+13/11/2019
+    -mai mult lucru la autonomii (building zone si umpic de loading [perfectionare lz])
+    -autonomiile doar cu parcare
