@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 public class HardwareMapFTC
 {
@@ -28,6 +29,7 @@ public class HardwareMapFTC
 
     public ColorSensor colorSensor = null;
     public ColorSensor colorSensorLeft = null;
+    public DistanceSensor distanceSensorBack = null;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -99,6 +101,8 @@ public class HardwareMapFTC
 
         colorSensor = hwMap.get(ColorSensor.class, "colorSensor");
         colorSensorLeft = hwMap.get(ColorSensor.class, "colorSensorLeft");
+
+        distanceSensorBack = hwMap.get(DistanceSensor.class, "distanceSensorBack");
 
     }
  }

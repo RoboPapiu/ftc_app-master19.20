@@ -70,3 +70,8 @@ Am reusit:
 13/11/2019
     -mai mult lucru la autonomii (building zone si umpic de loading [perfectionare lz])
     -autonomiile doar cu parcare
+
+14/11/2019
+    -schimbam autonomia cu tava de pe BZ (facem mai simplu)
+    -mai testam la LZ
+    -deci fi atent

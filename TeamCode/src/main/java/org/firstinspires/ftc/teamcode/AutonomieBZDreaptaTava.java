@@ -65,24 +65,36 @@ public class AutonomieBZDreaptaTava extends LinearOpMode {
             robot.servoAutonomousRight.setPosition(0.2);
 
             //in fata ...cm
-            encoderDrive(DRIVE_SPEED, 65, 65, stdTimeOut);
+            encoderDrive(DRIVE_SPEED, 120, 120, stdTimeOut);
             sleep(SLEEPTIME);
 
-            //strafe stanga ...cm
-            strafeDrive(DRIVE_SPEED, 'l', 75, stdTimeOut);
+            //rotire 90 grade
+            encoderDrive(DRIVE_SPEED, -61, 61, stdTimeOut);
             sleep(SLEEPTIME);
 
             //in fata ...cm
-            encoderDrive(DRIVE_SPEED, 14, 14, stdTimeOut);
+            encoderDrive(DRIVE_SPEED / 3, 15, 15, stdTimeOut);
             sleep(SLEEPTIME + 200);
 
             //prins platoforma
             robot.servoFoundation1.setPosition(0);
             robot.servoFoundation0.setPosition(1);
-            sleep(SLEEPTIME +  900);
+            sleep(SLEEPTIME +  400);
 
-            //in spate ...cm
-            encoderDrive(DRIVE_SPEED, -80, -80, stdTimeOut);
+            //strafe la stanga
+            strafeDrive(DRIVE_SPEED, 'l', 80, stdTimeOut);
+            sleep(SLEEPTIME);
+
+            //rotire o tara
+            encoderDrive(DRIVE_SPEED, -35, 35, stdTimeOut);
+            sleep(SLEEPTIME);
+
+            //strafe la stanga
+            strafeDrive(DRIVE_SPEED, 'l', 50, stdTimeOut);
+            sleep(SLEEPTIME);
+
+            //in fata muie
+            encoderDrive(DRIVE_SPEED, 15, 15, stdTimeOut);
             sleep(SLEEPTIME);
 
             //ridicare servouri
@@ -90,28 +102,12 @@ public class AutonomieBZDreaptaTava extends LinearOpMode {
             robot.servoFoundation0.setPosition(0.3);
             sleep(SLEEPTIME);
 
-            //strafe dreapta ...cm
-            strafeDrive(DRIVE_SPEED,'r',89, stdTimeOut);
-            sleep(SLEEPTIME);
-
-            //in fata ...cm
-            encoderDrive(DRIVE_SPEED,60,60, stdTimeOut);
-            sleep(SLEEPTIME);
-
             //strafe stanga ...cm
-            strafeDrive(DRIVE_SPEED,'l', 26, stdTimeOut);
+            strafeDrive(DRIVE_SPEED,'l',30, stdTimeOut);
             sleep(SLEEPTIME);
 
-            //in spate ...cm
-            encoderDrive(DRIVE_SPEED, -59, -59, stdTimeOut);
+            encoderDrive(DRIVE_SPEED, -60, -60, stdTimeOut);
             sleep(SLEEPTIME);
-
-            //strafe dreapta - parcare
-            strafeDrive(DRIVE_SPEED, 'r', 70, stdTimeOut);
-            sleep(SLEEPTIME);
-
-
-            sleep(100000000); //e un sleep sa nu termine programul si sa vad inca pe  ecran tot ce vreu de la telemetry, sterge-l daca vrei
 
             telemetry.addData("Path", "Complete");
             telemetry.update();

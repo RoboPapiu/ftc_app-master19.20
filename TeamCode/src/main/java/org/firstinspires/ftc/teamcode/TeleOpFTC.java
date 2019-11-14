@@ -36,6 +36,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 
 @TeleOp(name="TeleOpFTC", group="FTC")
@@ -101,10 +102,7 @@ public class TeleOpFTC extends OpMode
         double armPowerY = 0.75;
         double armPowerX = 0.5;
 
-        telemetry.addData("armPower:", armPowerY);
-        telemetry.addData("speedLeft: ", speedLeft);/*
-        telemetry.addData("Ticks Lift: ", robot.armMotorLeft.getCurrentPosition());
-        telemetry.addData("Ticks Expand: ", robot.armMotor.getCurrentPosition());*/
+        telemetry.addData("Distance: ", robot.distanceSensorBack.getDistance(DistanceUnit.CM));
         telemetry.update();
 
         speedLeft /= 2;
