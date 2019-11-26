@@ -61,8 +61,8 @@ public class AutonomieBZDreaptaParcare extends LinearOpMode {
             robot.servoCub.setPosition(0.87);
             robot.servoFoundation0.setPosition(0.3);
             robot.servoFoundation1.setPosition(0.7);
-            robot.servoAutonomous.setPosition(0.2);
-            robot.servoAutonomousRight.setPosition(0.2);
+            robot.servoAutonomous.setPosition(0.6);
+            robot.servoAutonomousRight.setPosition(0.3);
 
 
             encoderDrive(DRIVE_SPEED, 5, 5, stdTimeOut);

@@ -95,15 +95,20 @@ public class TeleOpFTC extends OpMode
     @Override
     public void loop() {
 
+
+
         double speedLeft = -gamepad1.left_stick_y + gamepad1.left_stick_x;
         double speedRight = -gamepad1.left_stick_y - gamepad1.left_stick_x;
         double strafePower = 0.25;
 
         double armPowerY = 0.75;
-        double armPowerX = 0.5;
+        double armPowerX = 0.6;
 
-        telemetry.addData("Distance: ", robot.distanceSensorBack.getDistance(DistanceUnit.CM));
-        telemetry.update();
+        robot.servoAutonomous.setPosition(0.7);
+        robot.servoAutonomousRight.setPosition(0.3);
+
+//        telemetry.addData("Distance: ", robot.distanceSensorBack.getDistance(DistanceUnit.CM));
+//        telemetry.update();
 
         speedLeft /= 2;
         speedRight /= 2;
@@ -114,8 +119,8 @@ public class TeleOpFTC extends OpMode
             strafePower /= 2;
             speedLeft /= 2;
             speedRight /= 2;
-            armPowerY /= 2;
-            armPowerX /= 2;
+//            armPowerY /= 2;
+//            armPowerX /= 2;
         }
 
 
@@ -208,24 +213,29 @@ public class TeleOpFTC extends OpMode
             robot.servoFoundation0.setPosition(1);
         }
 
+        //bratul de agatat din dreapta
+        if (gamepad2.x) {
+            //deschide
+            robot.servoAutonomousRight.setPosition(0.3);
+        }
+        else if (gamepad2.b) {
+            robot.servoAutonomousRight.setPosition(1);
+        }
+//
+//        //bratul de agatat din stanga
+//        if (gamepad2.dpad_left) {
+//            //deschide
+//            robot.servoAutonomous.setPosition(0.6);
+//        }
+//        else if (gamepad2.dpad_right) {
+//            robot.servoAutonomous.setPosition(0);
+//        }
 
-
-
-    /*    double alphared = (double)(robot.colorSensor.alpha())/robot.colorSensor.red();
-        double alphagreen = robot.colorSensor.alpha()/robot.colorSensor.green();
-        double alphablue = robot.colorSensor.alpha()/robot.colorSensor.blue();
-
-        telemetry.addData("red: ",  robot.colorSensor.red());
-        telemetry.addData("green: ",  robot.colorSensor.green());
-        telemetry.addData("blue: ",  robot.colorSensor.blue());
-        telemetry.addData("alpha: ",  robot.colorSensor.alpha());
-        telemetry.addData("alphared: ", alphared);
-        telemetry.addData("alphagreen: ", alphagreen);
-        telemetry.addData("alphablue: ", alphablue);
-        telemetry.addData("rightspeed: ", speedRight);
-        telemetry.addData("leftspeed: ", speedLeft);
-        telemetry.update(); */
-
+        double alphared = (double)(robot.colorSensor.alpha())/robot.colorSensor.red();
+        telemetry.addData("alphared ", alphared);
+        double alphared1 = (double)(robot.colorSensorLeft.alpha())/robot.colorSensorLeft.red();
+        telemetry.addData("alphared1 ", alphared1);
+        telemetry.update();
     }
 
 
@@ -272,5 +282,21 @@ public class TeleOpFTC extends OpMode
 //
 //        robot.armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 //    }
+
+
+       /* double alphagreen = robot.colorSensor.alpha()/robot.colorSensor.green();
+        double alphablue = robot.colorSensor.alpha()/robot.colorSensor.blue();
+
+        telemetry.addData("red: ",  robot.colorSensor.red());
+        telemetry.addData("green: ",  robot.colorSensor.green());
+        telemetry.addData("blue: ",  robot.colorSensor.blue());
+        telemetry.addData("alpha: ",  robot.colorSensor.alpha());
+        telemetry.addData("alphared: ", alphared);
+        telemetry.addData("alphagreen: ", alphagreen);
+        telemetry.addData("alphablue: ", alphablue);
+        telemetry.addData("rightspeed: ", speedRight);
+        telemetry.addData("leftspeed: ", speedLeft);
+        telemetry.update();
+                    */
 
 }

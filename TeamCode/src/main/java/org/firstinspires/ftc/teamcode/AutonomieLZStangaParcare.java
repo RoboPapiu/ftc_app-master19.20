@@ -1,16 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
-
-@Autonomous(name="AutonomieFTC", group="FTC")
+@Autonomous(name="AutonomieLZStangaParcareFTC", group="FTC")
 //@Disabled
-public class AutonomieFTC extends LinearOpMode {
+public class AutonomieLZStangaParcare extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareMapFTC         robot   = new HardwareMapFTC();   // Use a Pushbot's hardware
@@ -25,6 +22,13 @@ public class AutonomieFTC extends LinearOpMode {
     static final double     TURN_SPEED              = 0.5;
     static final double     stdTimeOut              = 5.0;
     int                     indexLine               = 0;
+    double                  strafeLeft              = 140.0;
+    int                     strafeIndex             = 0;
+
+    static final double     COUNTS_PER_MOTOR_ARM    = 288.0;
+    static final double     COUNTS_PER_LIFT_MOTOR   = 1120.0;
+    static final double     LIFT_ARM_REDUCTION      = 45.0/125.0;
+    static final int        SLEEPTIME               = 100;
 
     @Override
     public void runOpMode() {
@@ -44,53 +48,28 @@ public class AutonomieFTC extends LinearOpMode {
         robot.backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+        robot.armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.armMotorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.armMotorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         if(opModeIsActive()) {
 
-
-            telemetry.addData("red: ",  robot.colorSensor.red());
-            telemetry.addData("green: ",  robot.colorSensor.green());
-            telemetry.addData("blue: ",  robot.colorSensor.blue());
-            telemetry.addData("alpha: ",  robot.colorSensor.alpha());
-            telemetry.update();
-
-            //72 cm fata, index 1 (stiu marc ca trebuie 0, dar cacatul asta de cod il face sa fie 1, incrementeaza indexLine in encoderDrive)
-            encoderDrive(DRIVE_SPEED, 71.5, 71.5, stdTimeOut);
-            printLineDone(indexLine); //functie scisa de mine (aka Dragos) uitate ce face, e super easy, dar ajuta destul de mult, e jos jos
-            sleep(1500);
-
-            //72 cm strafe dreapta, index 2
-            strafeDrive(DRIVE_SPEED, 'r', 72.0, stdTimeOut);
-            printLineDone(indexLine);
-            sleep(1000);
-
-            //prind cubul cu servo
-            //robot.servoCub.setPosition(1);
-            sleep(1000);
-
-            //30 cm spate, index 3
-            encoderDrive(DRIVE_SPEED, -50.0, -50.0, stdTimeOut);
-            printLineDone(indexLine);
-            sleep(1000);
-
-            //210 cm strafe stange, index 4
-            strafeDrive(DRIVE_SPEED, 'l', 230.0, stdTimeOut);
-            printLineDone(indexLine);
-            sleep(1000);
-
-            //lasa cubul cu servo
-           // robot.servoCub.setPosition(0.3);
-            sleep(1000);
+            robot.servoCub.setPosition(0.87);
+            robot.servoFoundation0.setPosition(0.3);
+            robot.servoFoundation1.setPosition(0.7);
+            robot.servoAutonomous.setPosition(0.6);
+            robot.servoAutonomousRight.setPosition(0.3);
 
 
-            encoderDrive(DRIVE_SPEED, -5.0, -5.0, stdTimeOut);
-            sleep(1000);
+            encoderDrive(DRIVE_SPEED, 63, 63, stdTimeOut);
+            sleep(SLEEPTIME);
 
-            strafeDrive(DRIVE_SPEED, 'r', 25.0, stdTimeOut);
-
-            sleep(100000000); //e un sleep sa nu termine programul si sa vad inca pe  ecran tot ce vreu de la telemetry, sterge-l daca vrei
+            strafeDrive(DRIVE_SPEED, 'r', 60, stdTimeOut);
+            sleep(SLEEPTIME);
 
             telemetry.addData("Path", "Complete");
             telemetry.update();
@@ -149,6 +128,11 @@ public class AutonomieFTC extends LinearOpMode {
         robot.backLeft.setPower(0);
         robot.backRight.setPower(0);
 
+        robot.frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         indexLine++;
 
     }
@@ -200,6 +184,11 @@ public class AutonomieFTC extends LinearOpMode {
         robot.backLeft.setPower(0);
         robot.backRight.setPower(0);
 
+        robot.frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         indexLine++;
     }
 
@@ -209,28 +198,9 @@ public class AutonomieFTC extends LinearOpMode {
         robot.frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
-    void printLineDone(int value)
-    {
-        telemetry.addData("Line: ", value);
-        telemetry.update();
-    }
-
-    boolean isSkystone () {
-        boolean ok = false;
-        if (robot.colorSensor.alpha()>100) {
-            if (robot.colorSensor.red()>40 && robot.colorSensor.red()<140 &&
-                robot.colorSensor.green()>45 && robot.colorSensor.green()<115 &&
-                robot.colorSensor.blue()>40 && robot.colorSensor.blue()<55) {
-                ok = true;
-            }
-            else {
-                ok = false;
-            }
-        }
-        return ok;
-    }
 
 
 }

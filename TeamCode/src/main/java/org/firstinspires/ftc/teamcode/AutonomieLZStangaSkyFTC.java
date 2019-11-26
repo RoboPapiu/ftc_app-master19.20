@@ -5,9 +5,11 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name="AutonomieBZDreaptaTavaFTC", group="FTC")
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
+@Autonomous(name="AutonomieLZStangaSkyFTC", group="FTC")
 //@Disabled
-public class AutonomieBZDreaptaTava extends LinearOpMode {
+public class AutonomieLZStangaSkyFTC extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareMapFTC         robot   = new HardwareMapFTC();   // Use a Pushbot's hardware
@@ -58,6 +60,8 @@ public class AutonomieBZDreaptaTava extends LinearOpMode {
         waitForStart();
         if(opModeIsActive()) {
 
+            telemetry.addData("Distance: ", robot.distanceSensorBack.getDistance(DistanceUnit.CM));
+            telemetry.update();
 
             robot.servoCub.setPosition(0.87);
             robot.servoFoundation0.setPosition(0.3);
@@ -65,54 +69,121 @@ public class AutonomieBZDreaptaTava extends LinearOpMode {
             robot.servoAutonomous.setPosition(0.6);
             robot.servoAutonomousRight.setPosition(0.3);
 
-            //in fata ...cm
-            encoderDrive(DRIVE_SPEED, 120, 120, stdTimeOut);
+            //72 cm fata, index 1 (stiu marc ca trebuie 0, dar cacatul asta de cod il face sa fie 1, incrementeaza indexLine in encoderDrive)
+            encoderDrive(DRIVE_SPEED, 64, 64, stdTimeOut);
+            printLineDone(indexLine); //functie scisa de mine (aka Dragos) uitate ce face, e super easy, dar ajuta destul de mult, e jos jos
             sleep(SLEEPTIME);
 
-            //rotire 90 grade
-            encoderDrive(DRIVE_SPEED, -61, 61, stdTimeOut);
-            sleep(SLEEPTIME);
+            while (opModeIsActive() && strafeIndex<4) {
 
-            //in fata ...cm
-            encoderDrive(DRIVE_SPEED / 3, 15, 15, stdTimeOut);
-            sleep(SLEEPTIME + 200);
+                sleep(SLEEPTIME);
+                double alphared = (double)(robot.colorSensorLeft.alpha())/robot.colorSensorLeft.red();
 
-            //prins platoforma
-            robot.servoFoundation1.setPosition(0);
-            robot.servoFoundation0.setPosition(1);
-            sleep(SLEEPTIME +  400);
 
-            //strafe la stanga
-            strafeDrive(DRIVE_SPEED, 'l', 80, stdTimeOut);
-            sleep(SLEEPTIME);
+                sleep(SLEEPTIME);
 
-            //rotire o tara
-            encoderDrive(DRIVE_SPEED, -42, 42, stdTimeOut);
-            sleep(SLEEPTIME);
+                if (isSkystone())
+                {
+                    break;
+                }
+                else
+                    {
+                    strafeDrive(DRIVE_SPEED, 'l', 23, stdTimeOut);
+                    printLineDone(indexLine);
 
-            //strafe la stanga
-            strafeDrive(DRIVE_SPEED, 'l', 60, stdTimeOut);
-            sleep(SLEEPTIME);
+                    sleep(SLEEPTIME);
+                    strafeLeft += 23.0;
+                    strafeIndex++;
+                    }
 
-            //in fata pt colt
-            encoderDrive(DRIVE_SPEED, 15, 15, stdTimeOut);
-            sleep(SLEEPTIME);
+            }
 
-            //ridicare servouri
-            robot.servoFoundation1.setPosition(0.7);
-            robot.servoFoundation0.setPosition(0.3);
-            sleep(SLEEPTIME);
-
-            //strafe stanga ...cm
-            strafeDrive(DRIVE_SPEED,'l',18, stdTimeOut);
-            sleep(SLEEPTIME);
-
-            encoderDrive(DRIVE_SPEED, -60, -60, stdTimeOut);
-            sleep(SLEEPTIME);
-
-            telemetry.addData("Path", "Complete");
+            telemetry.addData("al catele cub:", strafeIndex);
             telemetry.update();
 
+            //se pozitioneaza pt a putea agata - se alinieaza cu bratul de agatat
+            strafeDrive(DRIVE_SPEED, 'l', 28.5, stdTimeOut);
+            sleep(SLEEPTIME + 400);
+
+//            merge putin in fata pt a putea agata cu bratul
+           // encoderDrive(DRIVE_SPEED, 2, 2, stdTimeOut);
+            //sleep(SLEEPTIME + 200);
+
+            //prinde cubul - il agata
+            robot.servoAutonomousRight.setPosition(1);
+            sleep(SLEEPTIME + 400);
+
+//            sleep(1000000000);
+
+            //merge in spate (l-am pus jos)
+            encoderDrive(DRIVE_SPEED / 4, -30, -30, stdTimeOut);
+            sleep(SLEEPTIME);
+
+            //face strafe exact cat a mers in spre
+            strafeDrive(DRIVE_SPEED, 'r', strafeLeft, stdTimeOut);
+            printLineDone(indexLine);
+            sleep(SLEEPTIME);
+
+            //merge in fata
+            encoderDrive(DRIVE_SPEED, 11, 10, stdTimeOut);
+            sleep(SLEEPTIME);
+
+            //lasa cubul
+            robot.servoAutonomousRight.setPosition(0.3);
+            sleep(SLEEPTIME);
+
+
+            //se intoarce la randul de cuburi pt a gasi al doilea skystone
+            //pt parcare distance = 60;
+            //pt continuare = 119
+            strafeDrive(DRIVE_SPEED, 'l', 120.0, stdTimeOut);
+            sleep(SLEEPTIME);
+
+            //se indreapta tata
+            encoderDrive(DRIVE_SPEED, 4, 3, stdTimeOut);
+            sleep(SLEEPTIME);
+
+            //strafe pana in fata la al 2 lea skystone
+            strafeDrive(DRIVE_SPEED, 'l', strafeIndex * 23.0 + 56, stdTimeOut);
+            sleep(SLEEPTIME);
+
+            //se apropi de skystone
+            encoderDrive(DRIVE_SPEED, 31, 30, stdTimeOut);
+            sleep(SLEEPTIME);
+
+            //prinde skystone-ul
+            robot.servoAutonomous.setPosition(0);
+            sleep(SLEEPTIME + 400);
+
+            //spate
+            encoderDrive(DRIVE_SPEED / 3, -35, -35, stdTimeOut);
+            sleep(SLEEPTIME);
+
+            //strafe la stanga
+            strafeDrive(DRIVE_SPEED, 'r', 190 + strafeIndex * 23.0, stdTimeOut);
+            sleep(SLEEPTIME);
+
+            //lasa skystone-ul
+            robot.servoAutonomous.setPosition(0.7);
+            sleep(SLEEPTIME +  400);
+
+            //strafe dreapta parcare, probabil mai trebuie si mers putin in fata
+  //          strafeDrive(DRIVE_SPEED, 'l', 58, stdTimeOut);
+//            sleep(SLEEPTIME);
+
+            //mergem un pic putinel an fatzuka
+            encoderDrive(DRIVE_SPEED, 18, 18, stdTimeOut);
+            sleep(SLEEPTIME);
+
+            strafeDrive(DRIVE_SPEED, 'l', 58, stdTimeOut);
+            sleep(SLEEPTIME);
+
+            encoderDrive(DRIVE_SPEED, 3, 3 , stdTimeOut);
+            sleep(SLEEPTIME);
+
+
+            telemetry.addData("Ma muie!!! ", "AM TERMINAT!!!");
+            telemetry.update();
         }
     }
 
@@ -241,6 +312,80 @@ public class AutonomieBZDreaptaTava extends LinearOpMode {
         robot.armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
+    void printLineDone(int value)
+    {
+        telemetry.addData("Line: ", value);
+        telemetry.update();
+    }
+
+    void armHorizontal(double time, int direction)
+    {
+        //1 pt fata, -1 pt spate, sorin e gay
+
+        runtime.reset();
+        while (runtime.seconds() < time)
+            robot.armMotor.setPower(0.3 * direction);
+        robot.armMotor.setPower(0);
+    }
+
+    void armLift(double liftDistance)
+    {
+
+        int targetLiftDistance = (int)(liftDistance * LIFT_ARM_REDUCTION * COUNTS_PER_LIFT_MOTOR);
+
+        robot.armMotorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.armMotorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        robot.armMotorLeft.setTargetPosition(targetLiftDistance);
+        robot.armMotorRight.setTargetPosition(-targetLiftDistance);
+
+        robot.armMotorLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.armMotorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        robot.armMotorLeft.setPower(0.5);
+        robot.armMotorRight.setPower(0.5);
+
+        while (robot.armMotorRight.isBusy() && robot.armMotorLeft.isBusy()) {
+            idle();
+        }
+
+        robot.armMotorLeft.setPower(0);
+        robot.armMotorRight.setPower(0);
+
+    }
+
+    boolean isSkystone ()
+    {
+        boolean ok = false;
+        double alphared = (double)(robot.colorSensorLeft.alpha())/robot.colorSensorLeft.red();
+        if (alphared >= 3.0) {
+            ok = true;
+        }
+        else {
+            ok = false;
+        }
+        return ok;
+    }
 
 
 }
+
+
+           /*     telemetry.addData("Distance: ", robot.distanceSensorBack.getDistance(DistanceUnit.CM));
+                telemetry.update();
+                while((robot.distanceSensorBack.getDistance(DistanceUnit.CM) > 45.0) && opModeIsActive())
+                {
+                    telemetry.addData("sunt pe bines ", "ceaw marc");
+                    telemetry.update();
+                    robot.frontRight.setPower(-1);
+                    robot.backRight.setPower(-1);
+                    robot.frontLeft.setPower(1);
+                    robot.backLeft.setPower(1);
+                }
+                    telemetry.addData("sunt pe else ", "(ciclu/stop)");
+                    telemetry.update();
+                    robot.frontRight.setPower(0);
+                    robot.backRight.setPower(0);
+                    robot.frontLeft.setPower(0);
+                    robot.backLeft.setPower(0);
+            */

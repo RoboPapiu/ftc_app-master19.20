@@ -75,3 +75,6 @@ Am reusit:
     -schimbam autonomia cu tava de pe BZ (facem mai simplu)
     -mai testam la LZ
     -deci fi atent
+
+15/11/2019
+    -autonomii

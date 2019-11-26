@@ -5,9 +5,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name="AutonomieBZDreaptaTavaFTC", group="FTC")
+@Autonomous(name="AutonomieBZStangaTavaFTC", group="FTC")
 //@Disabled
-public class AutonomieBZDreaptaTava extends LinearOpMode {
+public class AutonomieBZStangaTava extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareMapFTC         robot   = new HardwareMapFTC();   // Use a Pushbot's hardware
@@ -58,7 +58,6 @@ public class AutonomieBZDreaptaTava extends LinearOpMode {
         waitForStart();
         if(opModeIsActive()) {
 
-
             robot.servoCub.setPosition(0.87);
             robot.servoFoundation0.setPosition(0.3);
             robot.servoFoundation1.setPosition(0.7);
@@ -70,7 +69,7 @@ public class AutonomieBZDreaptaTava extends LinearOpMode {
             sleep(SLEEPTIME);
 
             //rotire 90 grade
-            encoderDrive(DRIVE_SPEED, -61, 61, stdTimeOut);
+            encoderDrive(DRIVE_SPEED, 61, -61, stdTimeOut);
             sleep(SLEEPTIME);
 
             //in fata ...cm
@@ -83,15 +82,15 @@ public class AutonomieBZDreaptaTava extends LinearOpMode {
             sleep(SLEEPTIME +  400);
 
             //strafe la stanga
-            strafeDrive(DRIVE_SPEED, 'l', 80, stdTimeOut);
+            strafeDrive(DRIVE_SPEED, 'r', 80, stdTimeOut);
             sleep(SLEEPTIME);
 
             //rotire o tara
-            encoderDrive(DRIVE_SPEED, -42, 42, stdTimeOut);
+            encoderDrive(DRIVE_SPEED, 42, -42, stdTimeOut);
             sleep(SLEEPTIME);
 
             //strafe la stanga
-            strafeDrive(DRIVE_SPEED, 'l', 60, stdTimeOut);
+            strafeDrive(DRIVE_SPEED, 'r', 60, stdTimeOut);
             sleep(SLEEPTIME);
 
             //in fata pt colt
@@ -104,7 +103,7 @@ public class AutonomieBZDreaptaTava extends LinearOpMode {
             sleep(SLEEPTIME);
 
             //strafe stanga ...cm
-            strafeDrive(DRIVE_SPEED,'l',18, stdTimeOut);
+            strafeDrive(DRIVE_SPEED,'r',18, stdTimeOut);
             sleep(SLEEPTIME);
 
             encoderDrive(DRIVE_SPEED, -60, -60, stdTimeOut);
@@ -112,7 +111,6 @@ public class AutonomieBZDreaptaTava extends LinearOpMode {
 
             telemetry.addData("Path", "Complete");
             telemetry.update();
-
         }
     }
 

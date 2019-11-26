@@ -1,15 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name="AutonomieStangaFTC", group="FTC")
-@Disabled
-public class AutonomieLeftFTC extends LinearOpMode {
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
+@Autonomous(name="AutonomieLZDreaptaSkyFTC", group="FTC")
+//@Disabled
+public class AutonomieLZDreaptaSkyFTC extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareMapFTC         robot   = new HardwareMapFTC();   // Use a Pushbot's hardware
@@ -25,11 +25,12 @@ public class AutonomieLeftFTC extends LinearOpMode {
     static final double     stdTimeOut              = 5.0;
     int                     indexLine               = 0;
     double                  strafeLeft              = 140.0;
-    int                     inde = 0;
+    int                     strafeIndex             = 0;
 
     static final double     COUNTS_PER_MOTOR_ARM    = 288.0;
     static final double     COUNTS_PER_LIFT_MOTOR   = 1120.0;
     static final double     LIFT_ARM_REDUCTION      = 45.0/125.0;
+    static final int        SLEEPTIME               = 100;
 
     @Override
     public void runOpMode() {
@@ -49,112 +50,137 @@ public class AutonomieLeftFTC extends LinearOpMode {
         robot.backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-
         robot.armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.armMotorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.armMotorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
 
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         if(opModeIsActive()) {
 
-
-            telemetry.addData("red: ",  robot.colorSensorLeft.red());
-            telemetry.addData("green: ",  robot.colorSensorLeft.green());
-            telemetry.addData("blue: ",  robot.colorSensorLeft.blue());
-            telemetry.addData("alpha: ",  robot.colorSensorLeft.alpha());
-            double alphaRed = (double)(robot.colorSensorLeft.alpha())/robot.colorSensorLeft.red();
-            telemetry.addData("alphaRed: ", alphaRed);
+            telemetry.addData("Distance: ", robot.distanceSensorBack.getDistance(DistanceUnit.CM));
             telemetry.update();
 
+            robot.servoCub.setPosition(0.87);
             robot.servoFoundation0.setPosition(0.3);
             robot.servoFoundation1.setPosition(0.7);
-
-            sleep(100);
-
-            armLift(0.1);
-
-            sleep(1000);
-
-            armLift(-0.1);
-
-            sleep(10000);
+            robot.servoAutonomous.setPosition(0.6);
+            robot.servoAutonomousRight.setPosition(0.3);
 
             //72 cm fata, index 1 (stiu marc ca trebuie 0, dar cacatul asta de cod il face sa fie 1, incrementeaza indexLine in encoderDrive)
-            encoderDrive(DRIVE_SPEED, 68, 68, stdTimeOut);
+            encoderDrive(DRIVE_SPEED, 64, 64, stdTimeOut);
             printLineDone(indexLine); //functie scisa de mine (aka Dragos) uitate ce face, e super easy, dar ajuta destul de mult, e jos jos
-            sleep(1500);
+            sleep(SLEEPTIME);
 
-            while (opModeIsActive()) {
+            while (opModeIsActive() && strafeIndex<4) {
 
-                sleep(100);
+                sleep(SLEEPTIME);
                 double alphared = (double)(robot.colorSensor.alpha())/robot.colorSensor.red();
 
 
-                telemetry.addData("red: ",  robot.colorSensor.red());
-                telemetry.addData("green: ",  robot.colorSensor.green());
-                telemetry.addData("blue: ",  robot.colorSensor.blue());
-                telemetry.addData("alpha: ",  robot.colorSensor.alpha());
-                telemetry.addData("alphared: ", alphared);
-                telemetry.update();
+                sleep(SLEEPTIME);
 
-                sleep(100);
-
-                if (isSkystone()) {
-
-                    //robot.servoCub.setPosition(1);
-                    sleep(1000);
-
+                if (isSkystone())
+                {
                     break;
-/*
-                    encoderDrive(DRIVE_SPEED, -50.0, -50.0, stdTimeOut);
-                    printLineDone(indexLine);
-                    sleep(1000);
-
-
-                    strafeDrive(DRIVE_SPEED, 'l', 230.0, stdTimeOut);
-                    printLineDone(indexLine);
-                    sleep(1000);*/
-
                 }
-
-                else {
-
-                    strafeDrive(DRIVE_SPEED, 'l', 23, stdTimeOut);
+                else
+                    {
+                    strafeDrive(DRIVE_SPEED, 'r', 23, stdTimeOut);
                     printLineDone(indexLine);
-                    sleep(1000);
-                    strafeLeft += 24.0;
 
-                }
+                    sleep(SLEEPTIME);
+                    strafeLeft += 23.0;
+                    strafeIndex++;
+                    }
 
             }
 
-            //30 cm spate, index 3
-            encoderDrive(DRIVE_SPEED, -50.0, -50.0, stdTimeOut);
+            telemetry.addData("al catele cub:", strafeIndex);
+            telemetry.update();
+
+            //se pozitioneaza pt a putea agata - se alinieaza cu bratul de agatat
+            strafeDrive(DRIVE_SPEED, 'r', 28.5, stdTimeOut);
+            sleep(SLEEPTIME + 400);
+
+//            merge putin in fata pt a putea agata cu bratul
+           // encoderDrive(DRIVE_SPEED, 2, 2, stdTimeOut);
+            //sleep(SLEEPTIME + 200);
+
+            //prinde cubul - il agata
+            robot.servoAutonomous.setPosition(0);
+            sleep(SLEEPTIME + 400);
+
+//            sleep(1000000000);
+
+            //merge in spate (l-am pus jos)
+            encoderDrive(DRIVE_SPEED / 4, -30, -30, stdTimeOut);
+            sleep(SLEEPTIME);
+
+            //face strafe exact cat a mers in spre
+            strafeDrive(DRIVE_SPEED, 'l', strafeLeft, stdTimeOut);
             printLineDone(indexLine);
-            sleep(1000);
+            sleep(SLEEPTIME);
+
+            //merge in fata
+            encoderDrive(DRIVE_SPEED, 10, 11, stdTimeOut);
+            sleep(SLEEPTIME);
+
+            //lasa cubul
+            robot.servoAutonomous.setPosition(0.7);
+            sleep(SLEEPTIME);
 
 
-            //210 cm strafe stange, index 4
-            strafeDrive(DRIVE_SPEED, 'r', strafeLeft, stdTimeOut);
-            printLineDone(indexLine);
-            sleep(1000);
+            //se intoarce la randul de cuburi pt a gasi al doilea skystone
+            //pt parcare distance = 60;
+            //pt continuare = 119
+            strafeDrive(DRIVE_SPEED, 'r', 120.0, stdTimeOut);
+            sleep(SLEEPTIME);
 
-            //lasa cubul cu servo
-            //robot.servoCub.setPosition(0.3);
-            sleep(1000);
+            //se indreapta tata
+            encoderDrive(DRIVE_SPEED, 3, 4, stdTimeOut);
+            sleep(SLEEPTIME);
 
-            encoderDrive(DRIVE_SPEED, 65, 65, stdTimeOut);
+            //strafe pana in fata la al 2 lea skystone
+            strafeDrive(DRIVE_SPEED, 'r', strafeIndex * 23.0 + 56, stdTimeOut);
+            sleep(SLEEPTIME);
 
-            encoderDrive(DRIVE_SPEED, -15.0, -15.0, stdTimeOut);
-            sleep(1000);
+            //se apropi de skystone
+            encoderDrive(DRIVE_SPEED, 30, 31, stdTimeOut);
+            sleep(SLEEPTIME);
 
-            strafeDrive(DRIVE_SPEED, 'l', 60.0, stdTimeOut);
+            //prinde skystone-ul
+            robot.servoAutonomousRight.setPosition(1);
+            sleep(SLEEPTIME + 400);
 
-            sleep(100000000); //e un sleep sa nu termine programul si sa vad inca pe  ecran tot ce vreu de la telemetry, sterge-l daca vrei
+            //spate
+            encoderDrive(DRIVE_SPEED / 3, -35, -35, stdTimeOut);
+            sleep(SLEEPTIME);
 
-            telemetry.addData("Path", "Complete");
+            //strafe la stanga
+            strafeDrive(DRIVE_SPEED, 'l', 175 + strafeIndex * 23.0, stdTimeOut);
+            sleep(SLEEPTIME);
+
+            //lasa skystone-ul
+            robot.servoAutonomousRight.setPosition(0.3);
+            sleep(SLEEPTIME +  400);
+
+            //strafe dreapta parcare, probabil mai trebuie si mers putin in fata
+
+
+            //mergem un pic putinel an fatzuka
+            encoderDrive(DRIVE_SPEED, 18, 18, stdTimeOut);
+            sleep(SLEEPTIME);
+
+            strafeDrive(DRIVE_SPEED, 'r', 58, stdTimeOut);
+            sleep(SLEEPTIME);
+
+            encoderDrive(DRIVE_SPEED, 3, 3 , stdTimeOut);
+            sleep(SLEEPTIME);
+
+            telemetry.addData("Ma muie!!! ", "AM TERMINAT!!!");
             telemetry.update();
         }
     }
@@ -290,6 +316,16 @@ public class AutonomieLeftFTC extends LinearOpMode {
         telemetry.update();
     }
 
+    void armHorizontal(double time, int direction)
+    {
+        //1 pt fata, -1 pt spate, sorin e gay
+
+        runtime.reset();
+        while (runtime.seconds() < time)
+            robot.armMotor.setPower(0.3 * direction);
+        robot.armMotor.setPower(0);
+    }
+
     void armLift(double liftDistance)
     {
 
@@ -319,8 +355,8 @@ public class AutonomieLeftFTC extends LinearOpMode {
     boolean isSkystone ()
     {
         boolean ok = false;
-        double alphared = (double)(robot.colorSensorLeft.alpha())/robot.colorSensorLeft.red();
-        if (alphared>=2.5) {
+        double alphared = (double)(robot.colorSensor.alpha())/robot.colorSensor.red();
+        if (alphared >= 3.0) {
             ok = true;
         }
         else {
@@ -331,3 +367,23 @@ public class AutonomieLeftFTC extends LinearOpMode {
 
 
 }
+
+
+           /*     telemetry.addData("Distance: ", robot.distanceSensorBack.getDistance(DistanceUnit.CM));
+                telemetry.update();
+                while((robot.distanceSensorBack.getDistance(DistanceUnit.CM) > 45.0) && opModeIsActive())
+                {
+                    telemetry.addData("sunt pe bines ", "ceaw marc");
+                    telemetry.update();
+                    robot.frontRight.setPower(-1);
+                    robot.backRight.setPower(-1);
+                    robot.frontLeft.setPower(1);
+                    robot.backLeft.setPower(1);
+                }
+                    telemetry.addData("sunt pe else ", "(ciclu/stop)");
+                    telemetry.update();
+                    robot.frontRight.setPower(0);
+                    robot.backRight.setPower(0);
+                    robot.frontLeft.setPower(0);
+                    robot.backLeft.setPower(0);
+            */
